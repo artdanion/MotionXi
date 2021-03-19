@@ -1,14 +1,16 @@
-#include <M5StickC.h>
-#include <driver/rtc_io.h> // from ESP-IDF
 #include "SPIFFS.h"
 #include <WiFi.h>
 #include <DNSServer.h>
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
-#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
-#include <OSCBundle.h>
-#include <OSCMessage.h>
 #include <Wire.h>
 #include <WiFiUdp.h>
+
+#include <driver/rtc_io.h>        // from ESP-IDF
+#include <M5StickC.h>             // https://github.com/m5stack/M5StickC        version = 0.2.0
+#include <WiFiManager.h>          // https://github.com/tzapu/WiFiManager       version = 2.0.3-alpha
+#include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson   version = 6.17.3
+#include <OSCBundle.h>            // https://github.com/CNMAT/OSC               version = 1.3.5
+#include <OSCMessage.h>           // https://github.com/CNMAT/OSC               version = 1.3.5
+
 
 WiFiUDP Udp;                                // UDP instance
 WiFiManager wifiManager;
@@ -43,15 +45,15 @@ void IRAM_ATTR mpu6886_wake_on_motion_isr(void) {
   g_wom_last_millis = millis();
 }
 
-float getBatteryLevel(float voltage);
-void draw_battery_percent();
-void cubeloop();
-void drawSend(char *HostIP, char *sendPort);
-void vectRotXYZ(double angle, int axe);
 void saveConfigCallback ();
-void extractIpAddress(char *sourceString, short *ipAddress);
 void loadParameters();
 void saveParameters();
+float getBatteryLevel(float voltage);
+void draw_battery_percent();
+void drawSend(char *HostIP, char *sendPort);
+void cubeloop();
+void vectRotXYZ(double angle, int axe);
+void extractIpAddress(char *sourceString, short *ipAddress);
 
 #define M_PI 3.141592653
 #define grey 0x65DB
@@ -152,8 +154,13 @@ void setup() {
   M5.Mpu6886.Init(); // basic init
   M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 10);
 
-  snprintf(PortalName, sizeof(PortalName), "MotionXi_%d", (uint16_t)ESP.getEfuseMac());
+  for(int i=0; i<17; i=i+8) {
+	  chipId |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+	}
 
+  snprintf(PortalName, sizeof(PortalName), "MotionXi_%d", chipId);
+ 
+  WiFi.setHostname(PortalName);
   Serial.println(PortalName);
 
   M5.Lcd.setRotation(3);
@@ -244,7 +251,7 @@ void setup() {
 
   extractIpAddress(HostIP, &ipAddress[0]);
 
-  const unsigned int localPort = int(recivePort);                                   // local port to listen for OSC packets
+  const unsigned int localPort = atoi(recivePort);                   // local port to listen for OSC packets
   Udp.begin(localPort);
 
   Serial.println("Done");
@@ -253,11 +260,10 @@ void setup() {
 }
 
 int framecount = 0;
-int ispeed = 10000; // interpolation speed
+int ispeed = 10000;
 double bouncespeed = 100;
-double lastspeedpot;
-int c = 1;
-int pres = false;
+int brightnessLevel = 1;
+int pressed = false;
 bool inv = false;
 
 void loop() {
@@ -271,7 +277,7 @@ void loop() {
 
   IPAddress ip(WiFi.localIP());                                               // Device IP
   IPAddress outIp(ipAddress[0], ipAddress[1], ipAddress[2], ipAddress[3]);    // remote IP of the connected Computer
-  unsigned int outPort = atoi(sendPort);
+  unsigned int outPort = atoi(sendPort);                                      // Port send to
 
   OSCBundle bndl;
 
@@ -373,17 +379,18 @@ void loop() {
 
     if (digitalRead(37) == 0)
     {
-      if (pres == 0)
+      if (pressed == 0)
       {
-        pres = 1;
-        c++;
-        if (c > 4)
-          c = 0;
-        M5.Axp.ScreenBreath(bright[c]);
+        pressed = 1;
+        brightnessLevel++;
+        if (brightnessLevel > 4)
+          brightnessLevel = 0;
+        M5.Axp.ScreenBreath(bright[brightnessLevel]);
         M5.Lcd.fillRect(128, 68, 160, 80, TFT_BLACK);
+        drawSend(HostIP, sendPort);
       }
     } else {
-      pres = 0;
+      pressed = 0;
     }
 
     int temp = (int)(M5.Axp.GetTempInAXP192() + .5);
@@ -391,13 +398,13 @@ void loop() {
     M5.Lcd.drawString(String( temp ) + " C  ", 3, 3);
     M5.Lcd.drawString(String( M5.Axp.GetBatVoltage() ) + " V  ", 114, 3);
 
-    for (int i = 0; i < c + 1; i++)
+    for (int i = 0; i < brightnessLevel + 1; i++)
       M5.Lcd.fillRect( 128 + (i * 5), 68, 3, 8, grey);
 
     if (M5.BtnB.wasPressed()) {
       M5.Lcd.invertDisplay(inv);
-      drawSend(HostIP, sendPort);
       inv = !inv;
+      drawSend(HostIP, sendPort);
     }
 
     if (short_press)

@@ -1,2 +1,0 @@
-# MotionXi
-Osc sending device
