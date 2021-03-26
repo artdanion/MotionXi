@@ -13,7 +13,8 @@ All used libraries are static included in the lib directory. Simple clone reposi
 | ![alt text](https://m5stack.oss-cn-shenzhen.aliyuncs.com/image/icon/LOGO.jpg "M5Stack Logo Logo ")     | |   **[M5Stack](https://m5stack.com/ "M5Stack")** |
 |  | |    |
 
-Arduino IDE users rename MotionX1.cpp to MotionXi.ino and finde name + version of the used libraries in the header.
+**Arduino IDE** users rename MotionX1.cpp to MotionXi.ino and finde name + version of the used libraries in the description.
+#include the header file(s) for the static library using quotation marks. In a typical solution, the path starts with ../<library project name>.
 Make sure that ESP32 boards are installed in the boardsmanager, use **ESP32 pico kit** as selected board.
 
 ### Hardeware
