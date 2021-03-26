@@ -1,46 +1,13 @@
+all libraries are unchanged in this project but without the example files
 
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into executable file.
+| LIBRARY   | github link  |  version used  |   |
+|:---|:---:|---:|---| 
+|M5StickC             |https://github.com/m5stack/M5StickC  |      version = 0.2.0|
+|WiFiManager          |https://github.com/tzapu/WiFiManager    |   version = 2.0.3-alpha|
+|ArduinoJson          |https://github.com/bblanchon/ArduinoJson |  version = 6.17.3|
+|OSCBundle            |https://github.com/CNMAT/OSC              | version = 1.3.5|
+|OSCMessage           |https://github.com/CNMAT/OSC              | version = 1.3.5|
 
-The source code of each library should be placed in a an own separate directory
-("lib/your_library_name/[here are source files]").
 
-For example, see a structure of the following two libraries `Foo` and `Bar`:
-
-|--lib
-|  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
-|  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
-|--src
-   |- main.c
-
-and a contents of `src/main.c`:
-```
-#include <Foo.h>
-#include <Bar.h>
-
-int main (void)
-{
-  ...
-}
-
-```
-
-PlatformIO Library Dependency Finder will find automatically dependent
-libraries scanning project source files.
-
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+M5StickC and WiFiManager libraries are newer versions than in the ArduinoIDE included.
+M5StickC_0.2.0 supports wake_on_motion
