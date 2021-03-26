@@ -40,9 +40,9 @@ In the case folder you will find .stl files for a case conversion which has spac
 ### OSC Topics
 |   |   |   |
 |:---|---:|---:|
-|/_<device ID>_/roll  | roll angle |
-|/_<device ID>_/pitch    | pitch angle|
-| /_<device ID>_/yaw | yaw angle|
+|/_device ID_/roll  | roll angle |
+|/_device ID_/pitch    | pitch angle|
+| /_device ID_/yaw | yaw angle|
 |||
 
 ### Button functions
