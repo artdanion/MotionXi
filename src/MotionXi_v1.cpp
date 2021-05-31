@@ -34,7 +34,7 @@ SOFTWARE.
 #include <ArduinoJson.h>   // https://github.com/bblanchon/ArduinoJson   version = 6.17.3
 #include <OSCBundle.h>     // https://github.com/CNMAT/OSC               version = 1.3.5
 #include <OSCMessage.h>    // https://github.com/CNMAT/OSC               version = 1.3.5
-#include <bmm150.h>
+#include <bmm150.h>        // bmm150 support added from  https://github.com/edumo/M5StickC_Imu-9-axis
 #include <bmm150_defs.h>
 
 WiFiUDP Udp; // UDP instance
@@ -163,11 +163,19 @@ inline uint8_t __attribute__((always_inline)) rng()
 TFT_eSprite tftSprite = TFT_eSprite(&M5.Lcd);
 
 int16_t ax, ay, az, gx, gy, gz;
-double MMPI = 32768 * M_PI;
+double MMPI = 32768 * 3.141592653;
 int bright[5] = {7, 8, 9, 10, 12};
 static const float levels[] = {4.13, 4.06, 3.98, 3.92, 3.87, 3.82, 3.79, 3.77, 3.74, 3.68, 3.45, 3.00};
 bool screenSaver = false;
 bool returnScreen = false;
+
+int framecount = 0;
+int ispeed = 10000;
+double bouncespeed = 100;
+int brightnessLevel = 1;
+int pressed = false;
+bool inv = false;
+bool animation = true;
 
 long int timeLast = -100, period = 1;
 
@@ -353,14 +361,6 @@ void setup()
 
   drawSend(HostIP, sendPort);
 }
-
-int framecount = 0;
-int ispeed = 10000;
-double bouncespeed = 100;
-int brightnessLevel = 1;
-int pressed = false;
-bool inv = false;
-bool animation = true;
 
 void loop()
 {
