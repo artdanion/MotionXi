@@ -138,7 +138,7 @@ void myMahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 #define NSTARS 512
 
 #define twoKpDef (2.0f * 0.5f) // 2 * proportional gain
-#define twoKiDef (2.0f * 0.0f) // 2 * integral gain
+#define twoKiDef (2.0f * 0.005f) // 2 * integral gain
 
 // screensaver options in seconds
 #define SCSAVERTIME 30
