@@ -18,7 +18,8 @@ float xOffset = PI/2;
 float yOffset = PI/4;
 float zOffset = PI;
 
-int Port = 8888;
+int Port = 9001;
+String devID = "Mot1";
 
 void setup() {
   size(600,400, P3D);
@@ -62,13 +63,13 @@ void draw() {
 // incoming osc message are forwarded to the oscEvent method. 
 void oscEvent(OscMessage theOscMessage) {
   //println(theOscMessage.addrPattern());
-  if (theOscMessage.addrPattern().equals("/Proto/roll")){
+  if (theOscMessage.addrPattern().equals("/"+devID+"/roll")){
     analogValue0 = theOscMessage.get(0).floatValue();
     //println(analogValue0);
-  } else if(theOscMessage.addrPattern().equals("/Proto/pitch")){
+  } else if(theOscMessage.addrPattern().equals("/"+devID+"/pitch")){
     analogValue1 = theOscMessage.get(0).floatValue();
     //println(analogValue1);
-  } else if(theOscMessage.addrPattern().equals("/Proto/yaw")){
+  } else if(theOscMessage.addrPattern().equals("/"+devID+"/yaw")){
     analogValue2 = theOscMessage.get(0).floatValue();
     //println(analogValue2);
   }
