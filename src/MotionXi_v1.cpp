@@ -137,8 +137,12 @@ void myMahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 #define WAKE_REASON_BUF_LEN 100
 #define NSTARS 512
 
+// *********************** PI Controller settings *******************
+
 #define twoKpDef (2.0f * 0.6f)   // 2 * proportional gain
 #define twoKiDef (2.0f * 0.006f) // 2 * integral gain
+
+// *********************** PI Controller settings *******************
 
 // screensaver options in seconds
 #define SCSAVERTIME 30
