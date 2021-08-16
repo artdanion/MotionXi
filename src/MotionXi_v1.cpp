@@ -139,8 +139,8 @@ void myMahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 
 // *********************** PI Controller settings *******************
 
-#define twoKpDef (2.0f * 0.6f)   // 2 * proportional gain
-#define twoKiDef (2.0f * 0.006f) // 2 * integral gain
+#define twoKpDef (2.0f * 0.5f)   // 2 * proportional gain
+#define twoKiDef (2.0f * 0.005f) // 2 * integral gain
 
 // *********************** PI Controller settings *******************
 
