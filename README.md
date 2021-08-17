@@ -53,6 +53,11 @@ In the case folder you will find .stl files for a case conversion which has spac
 * Button A long press - turns OFF/ON animation
 * Button B long press resets device data
 
+* Button A pressed 5 sec : Enter calibration Mode
+follow the text on the display
+first phase: hold the device steady for a few seconds
+second phase: move, flip and rotate the device for a few seconds
+
 
 Hardware based on **M5StickC**:
 ![alt text](https://m5stack.oss-cn-shenzhen.aliyuncs.com/image/m5-docs_content/core/m5stickc_01.png "M5StickC")
