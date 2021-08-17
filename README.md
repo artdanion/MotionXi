@@ -54,8 +54,11 @@ In the case folder you will find .stl files for a case conversion which has spac
 * Button B long press resets device data
 
 * Button A pressed 5 sec : Enter calibration Mode
+
 follow the text on the display
+
 first phase: hold the device steady for a few seconds
+
 second phase: move, flip and rotate the device for a few seconds
 
 
