@@ -22,6 +22,8 @@ In the case folder you will find .stl files for a case conversion which has spac
 
 * **[350mAh 3.7V LIPO](https://www.berrybase.de/strom/batterien-akkus/industrieakkus/lp-552035-lithium-polymer/lipo-akku-3-7v-350mah-mit-2-pin-jst-stecker?c=363 "berrybase.de")**
 * **[BB-SWITCH-3P](https://www.berrybase.de/bauelemente/schalter-taster/mikroschalter-taster/3-poliger-schiebeschalter-f-252-r-breadboards "berrybase.de")**
+--->NEW for no drift on Z-axis:  
+* **[M5StickC ENV Hat (DHT12, BMP280, BMM150)](https://shop.m5stack.com/products/m5stickc-env-hat?_pos=3&_sid=d5a80659b&_ss=r&variant=17266544214106)** 
 
 **Switching machine operation:** Press power switch for two seconds to turn it on, and press and hold for six seconds to turn it off.
 
