@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2021 artdanion
+Copyright (c) 2021 artdanion, M5Stack, tzapu, Benoit BLANCHON, Yotam Mann and Adrian Freed, Edumo.net
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
