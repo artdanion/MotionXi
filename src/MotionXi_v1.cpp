@@ -963,7 +963,7 @@ float getBatteryLevel(float voltage)
 void draw_battery_percent()
 {
   float battery_percent = getBatteryLevel(M5.Axp.GetBatVoltage());
-  M5.Lcd.setTextColor(0xAA00FF00, TFT_BLACK);
+  M5.Lcd.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   M5.Lcd.setCursor(59, 2, 1);
   M5.Lcd.print(battery_percent * 100, 1);
   M5.Lcd.print("%");
