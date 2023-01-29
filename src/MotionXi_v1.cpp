@@ -43,7 +43,7 @@ WiFiManager wifiManager;
 bmm150_mag_data value_offset;
 BMM150 bmm = BMM150();
 
-//define your default values here, if there are different values in config.json, they are overwritten.
+// define your default values here, if there are different values in config.json, they are overwritten.
 char HostIP[20];
 char sendPort[6];
 char recivePort[6];
@@ -53,7 +53,7 @@ char PortalName[20];
 const int buttonPin = 0;
 bool buttonState = 0;
 
-//flag for saving data / erase data
+// flag for saving data / erase data
 bool shouldSaveConfig = true;
 
 unsigned char ip[] = {0};
@@ -90,7 +90,7 @@ float magmin[3];
 uint8_t setup_flag = 1;
 uint8_t action_flag = 1;
 
-//Mahony fix updated_balac_pid
+// Mahony fix updated_balac_pid
 float power = 0;
 float dt, preTime;
 float loopfreq;
@@ -218,10 +218,9 @@ void setup()
   pinMode(39, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
 
-  //wifiManager.resetSettings();
-  //SPIFFS.format();
-    Serial.begin(115200);
-  Serial.println("hello");
+  // wifiManager.resetSettings();
+  // SPIFFS.format();
+  Serial.begin(115200);
 
 #ifdef WOM_ATTACH_ISR
   delay(100);
@@ -231,7 +230,7 @@ void setup()
   attachInterrupt(GPIO_NUM_35, mpu6886_wake_on_motion_isr, FALLING);
 #endif
 
-  //Increment boot number and print it every reboot
+  // Increment boot number and print it every reboot
   ++bootCount;
   Serial.println("Boot number: " + String(bootCount));
 
@@ -240,9 +239,8 @@ void setup()
   Wire.begin(0, 26);
 
   M5.Mpu6886.Init(); // basic init
-  //M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 10);
+                     // M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 10);
 
-      Serial.println("2.");
 
   if (bmm.initialize() == BMM150_E_ID_NOT_CONFORM)
   {
@@ -254,8 +252,6 @@ void setup()
     Serial.println("Initialize done!");
     withMagnet = true;
   }
-
-
 
   Serial.print("\n\rCalibrate done..");
   initData();
@@ -289,7 +285,7 @@ void setup()
 
   loadParameters();
 
-  //set config save notify callback
+  // set config save notify callback
   wifiManager.setSaveConfigCallback(saveConfigCallback);
 
   // The extra parameters to be configured (can be either global or just in the setup)
@@ -300,7 +296,7 @@ void setup()
   WiFiManagerParameter custom_sendPort("sendPort", "Send Port 8888", sendPort, 6);
   WiFiManagerParameter custom_recivePort("recivePort", "Recive Port 9999", recivePort, 6);
 
-  //add all your parameters here
+  // add all your parameters here
   wifiManager.addParameter(&custom_devID);
   wifiManager.addParameter(&custom_HostIP);
   wifiManager.addParameter(&custom_sendPort);
@@ -337,15 +333,15 @@ void setup()
   {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
-    //reset and try again, or maybe put it to deep sleep
+    // reset and try again, or maybe put it to deep sleep
     ESP.restart();
     delay(5000);
   }
 
-  //if you get here you have connected to the WiFi
+  // if you get here you have connected to the WiFi
   Serial.println("connected...");
 
-  //read updated parameters
+  // read updated parameters
   strcpy(devID, custom_devID.getValue());
   strcpy(HostIP, custom_HostIP.getValue());
   strcpy(sendPort, custom_sendPort.getValue());
@@ -401,7 +397,7 @@ void loop()
   strcat(oscYaw, devID);
   strcat(oscYaw, "/yaw");
 
-  //M5.MPU6886.getAhrsData(&pitch, &roll, &yaw);
+  // M5.MPU6886.getAhrsData(&pitch, &roll, &yaw);
 
   dt = (micros() - preTime) / 1000000;
   preTime = micros();
@@ -411,7 +407,7 @@ void loop()
 
   float pitch = asin(-2 * myQ1 * myQ3 + 2 * myQ0 * myQ2);                                                    // pitch
   float roll = atan2(2 * myQ2 * myQ3 + 2 * myQ0 * myQ1, -2 * myQ1 * myQ1 - 2 * myQ2 * myQ2 + 1);             // roll
-  float yaw = atan2(2 * (myQ1 * myQ2 + myQ0 * myQ3), myQ0 * myQ0 + myQ1 * myQ1 - myQ2 * myQ2 - myQ3 * myQ3); //yaw
+  float yaw = atan2(2 * (myQ1 * myQ2 + myQ0 * myQ3), myQ0 * myQ0 + myQ1 * myQ1 - myQ2 * myQ2 - myQ3 * myQ3); // yaw
 
   pitch *= RAD_TO_DEG;
   yaw *= RAD_TO_DEG;
@@ -458,7 +454,7 @@ void loop()
   Udp.endPacket(); // mark the end of the OSC Packet
   bndl.empty();    // empty the bundle to free room for a new one
 
-  //Serial.printf("%f    %f    %f \r\n", pitch, roll, yaw);
+  // Serial.printf("%f    %f    %f \r\n", pitch, roll, yaw);
 
   if (since_last_wom_millis > SCSAVERTIME * 1000)
   {
@@ -471,7 +467,7 @@ void loop()
       // enable waking up on pin 35 (from IMU)
       esp_sleep_enable_ext0_wakeup(GPIO_NUM_35, LOW);
 
-      //Go to sleep now
+      // Go to sleep now
       Serial.println("Going to sleep now");
       M5.Axp.SetSleep(); // conveniently turn off screen, etc.
       delay(100);
@@ -622,7 +618,7 @@ void loadParameters()
     Serial.println("mounted file system");
     if (SPIFFS.exists("/config.json"))
     {
-      //file exists, reading and loading
+      // file exists, reading and loading
       Serial.println("reading config file");
       File configFile = SPIFFS.open("/config.json", "r");
       if (configFile)
@@ -712,8 +708,8 @@ void cubeloop()
 
   scale = ceil((interpolation * 3) + (scaleMax - 3));
 
-  //M5.MPU6886.getGyroData(&gyroX, &gyroY, &gyroZ);
-  //M5.MPU6886.getAccelData(&accX, &accY, &accZ);
+  // M5.MPU6886.getGyroData(&gyroX, &gyroY, &gyroZ);
+  // M5.MPU6886.getAccelData(&accX, &accY, &accZ);
 
   int axCube = int(accX * 1000);
   int ayCube = int(accY * 1000);
@@ -765,62 +761,62 @@ void cubeloop()
   if (!inv)
   {
     tftSprite.fillSprite(BLACK);
-    tftSprite.drawLine(P1[0], P1[1], P2[0], P2[1], TFT_BLUE); //1-2
-    tftSprite.drawLine(P1[0], P1[1], P3[0], P3[1], TFT_BLUE); //1-3
-    tftSprite.drawLine(P1[0], P1[1], P5[0], P5[1], TFT_BLUE); //1-5
-    tftSprite.drawLine(P2[0], P2[1], P4[0], P4[1], TFT_BLUE); //2-4
-    tftSprite.drawLine(P2[0], P2[1], P6[0], P6[1], TFT_BLUE); //2-6
-    tftSprite.drawLine(P3[0], P3[1], P4[0], P4[1], TFT_BLUE); //3-4
-    tftSprite.drawLine(P3[0], P3[1], P7[0], P7[1], TFT_BLUE); //3-7
-    tftSprite.drawLine(P4[0], P4[1], P8[0], P8[1], TFT_BLUE); //4-8
-    tftSprite.drawLine(P5[0], P5[1], P6[0], P6[1], TFT_BLUE); //5-6
-    tftSprite.drawLine(P5[0], P5[1], P7[0], P7[1], TFT_BLUE); //5-7
-    tftSprite.drawLine(P6[0], P6[1], P8[0], P8[1], TFT_BLUE); //6-8
-    tftSprite.drawLine(P7[0], P7[1], P8[0], P8[1], TFT_BLUE); //7-8
+    tftSprite.drawLine(P1[0], P1[1], P2[0], P2[1], TFT_BLUE); // 1-2
+    tftSprite.drawLine(P1[0], P1[1], P3[0], P3[1], TFT_BLUE); // 1-3
+    tftSprite.drawLine(P1[0], P1[1], P5[0], P5[1], TFT_BLUE); // 1-5
+    tftSprite.drawLine(P2[0], P2[1], P4[0], P4[1], TFT_BLUE); // 2-4
+    tftSprite.drawLine(P2[0], P2[1], P6[0], P6[1], TFT_BLUE); // 2-6
+    tftSprite.drawLine(P3[0], P3[1], P4[0], P4[1], TFT_BLUE); // 3-4
+    tftSprite.drawLine(P3[0], P3[1], P7[0], P7[1], TFT_BLUE); // 3-7
+    tftSprite.drawLine(P4[0], P4[1], P8[0], P8[1], TFT_BLUE); // 4-8
+    tftSprite.drawLine(P5[0], P5[1], P6[0], P6[1], TFT_BLUE); // 5-6
+    tftSprite.drawLine(P5[0], P5[1], P7[0], P7[1], TFT_BLUE); // 5-7
+    tftSprite.drawLine(P6[0], P6[1], P8[0], P8[1], TFT_BLUE); // 6-8
+    tftSprite.drawLine(P7[0], P7[1], P8[0], P8[1], TFT_BLUE); // 7-8
 
     // draw cross on each cube face
-    tftSprite.drawLine(P1[0], P1[1], P4[0], P4[1], TFT_BLUE); //1-4
-    tftSprite.drawLine(P2[0], P2[1], P3[0], P3[1], TFT_BLUE); //2-3
-    tftSprite.drawLine(P1[0], P1[1], P6[0], P6[1], TFT_BLUE); //1-6
-    tftSprite.drawLine(P2[0], P2[1], P5[0], P5[1], TFT_BLUE); //2-5
-    tftSprite.drawLine(P2[0], P2[1], P8[0], P8[1], TFT_BLUE); //2-8
-    tftSprite.drawLine(P6[0], P6[1], P4[0], P4[1], TFT_BLUE); //6-4
-    tftSprite.drawLine(P4[0], P4[1], P7[0], P7[1], TFT_BLUE); //4-7
-    tftSprite.drawLine(P3[0], P3[1], P8[0], P8[1], TFT_BLUE); //3-8
-    tftSprite.drawLine(P1[0], P1[1], P7[0], P7[1], TFT_BLUE); //1-7
-    tftSprite.drawLine(P3[0], P3[1], P5[0], P5[1], TFT_BLUE); //3-5
-    tftSprite.drawLine(P5[0], P5[1], P8[0], P8[1], TFT_BLUE); //5-8
-    tftSprite.drawLine(P7[0], P7[1], P6[0], P6[1], TFT_BLUE); //7-6
+    tftSprite.drawLine(P1[0], P1[1], P4[0], P4[1], TFT_BLUE); // 1-4
+    tftSprite.drawLine(P2[0], P2[1], P3[0], P3[1], TFT_BLUE); // 2-3
+    tftSprite.drawLine(P1[0], P1[1], P6[0], P6[1], TFT_BLUE); // 1-6
+    tftSprite.drawLine(P2[0], P2[1], P5[0], P5[1], TFT_BLUE); // 2-5
+    tftSprite.drawLine(P2[0], P2[1], P8[0], P8[1], TFT_BLUE); // 2-8
+    tftSprite.drawLine(P6[0], P6[1], P4[0], P4[1], TFT_BLUE); // 6-4
+    tftSprite.drawLine(P4[0], P4[1], P7[0], P7[1], TFT_BLUE); // 4-7
+    tftSprite.drawLine(P3[0], P3[1], P8[0], P8[1], TFT_BLUE); // 3-8
+    tftSprite.drawLine(P1[0], P1[1], P7[0], P7[1], TFT_BLUE); // 1-7
+    tftSprite.drawLine(P3[0], P3[1], P5[0], P5[1], TFT_BLUE); // 3-5
+    tftSprite.drawLine(P5[0], P5[1], P8[0], P8[1], TFT_BLUE); // 5-8
+    tftSprite.drawLine(P7[0], P7[1], P6[0], P6[1], TFT_BLUE); // 7-6
   }
   else
   {
     tftSprite.fillSprite(BLACK);
-    tftSprite.drawLine(P1[0], P1[1], P2[0], P2[1], TFT_GREY); //1-2
-    tftSprite.drawLine(P1[0], P1[1], P3[0], P3[1], TFT_GREY); //1-3
-    tftSprite.drawLine(P1[0], P1[1], P5[0], P5[1], TFT_GREY); //1-5
-    tftSprite.drawLine(P2[0], P2[1], P4[0], P4[1], TFT_GREY); //2-4
-    tftSprite.drawLine(P2[0], P2[1], P6[0], P6[1], TFT_GREY); //2-6
-    tftSprite.drawLine(P3[0], P3[1], P4[0], P4[1], TFT_GREY); //3-4
-    tftSprite.drawLine(P3[0], P3[1], P7[0], P7[1], TFT_GREY); //3-7
-    tftSprite.drawLine(P4[0], P4[1], P8[0], P8[1], TFT_GREY); //4-8
-    tftSprite.drawLine(P5[0], P5[1], P6[0], P6[1], TFT_GREY); //5-6
-    tftSprite.drawLine(P5[0], P5[1], P7[0], P7[1], TFT_GREY); //5-7
-    tftSprite.drawLine(P6[0], P6[1], P8[0], P8[1], TFT_GREY); //6-8
-    tftSprite.drawLine(P7[0], P7[1], P8[0], P8[1], TFT_GREY); //7-8
+    tftSprite.drawLine(P1[0], P1[1], P2[0], P2[1], TFT_GREY); // 1-2
+    tftSprite.drawLine(P1[0], P1[1], P3[0], P3[1], TFT_GREY); // 1-3
+    tftSprite.drawLine(P1[0], P1[1], P5[0], P5[1], TFT_GREY); // 1-5
+    tftSprite.drawLine(P2[0], P2[1], P4[0], P4[1], TFT_GREY); // 2-4
+    tftSprite.drawLine(P2[0], P2[1], P6[0], P6[1], TFT_GREY); // 2-6
+    tftSprite.drawLine(P3[0], P3[1], P4[0], P4[1], TFT_GREY); // 3-4
+    tftSprite.drawLine(P3[0], P3[1], P7[0], P7[1], TFT_GREY); // 3-7
+    tftSprite.drawLine(P4[0], P4[1], P8[0], P8[1], TFT_GREY); // 4-8
+    tftSprite.drawLine(P5[0], P5[1], P6[0], P6[1], TFT_GREY); // 5-6
+    tftSprite.drawLine(P5[0], P5[1], P7[0], P7[1], TFT_GREY); // 5-7
+    tftSprite.drawLine(P6[0], P6[1], P8[0], P8[1], TFT_GREY); // 6-8
+    tftSprite.drawLine(P7[0], P7[1], P8[0], P8[1], TFT_GREY); // 7-8
 
     // draw cross on each cube face
-    tftSprite.drawLine(P1[0], P1[1], P4[0], P4[1], TFT_GREY); //1-4
-    tftSprite.drawLine(P2[0], P2[1], P3[0], P3[1], TFT_GREY); //2-3
-    tftSprite.drawLine(P1[0], P1[1], P6[0], P6[1], TFT_GREY); //1-6
-    tftSprite.drawLine(P2[0], P2[1], P5[0], P5[1], TFT_GREY); //2-5
-    tftSprite.drawLine(P2[0], P2[1], P8[0], P8[1], TFT_GREY); //2-8
-    tftSprite.drawLine(P6[0], P6[1], P4[0], P4[1], TFT_GREY); //6-4
-    tftSprite.drawLine(P4[0], P4[1], P7[0], P7[1], TFT_GREY); //4-7
-    tftSprite.drawLine(P3[0], P3[1], P8[0], P8[1], TFT_GREY); //3-8
-    tftSprite.drawLine(P1[0], P1[1], P7[0], P7[1], TFT_GREY); //1-7
-    tftSprite.drawLine(P3[0], P3[1], P5[0], P5[1], TFT_GREY); //3-5
-    tftSprite.drawLine(P5[0], P5[1], P8[0], P8[1], TFT_GREY); //5-8
-    tftSprite.drawLine(P7[0], P7[1], P6[0], P6[1], TFT_GREY); //7-6
+    tftSprite.drawLine(P1[0], P1[1], P4[0], P4[1], TFT_GREY); // 1-4
+    tftSprite.drawLine(P2[0], P2[1], P3[0], P3[1], TFT_GREY); // 2-3
+    tftSprite.drawLine(P1[0], P1[1], P6[0], P6[1], TFT_GREY); // 1-6
+    tftSprite.drawLine(P2[0], P2[1], P5[0], P5[1], TFT_GREY); // 2-5
+    tftSprite.drawLine(P2[0], P2[1], P8[0], P8[1], TFT_GREY); // 2-8
+    tftSprite.drawLine(P6[0], P6[1], P4[0], P4[1], TFT_GREY); // 6-4
+    tftSprite.drawLine(P4[0], P4[1], P7[0], P7[1], TFT_GREY); // 4-7
+    tftSprite.drawLine(P3[0], P3[1], P8[0], P8[1], TFT_GREY); // 3-8
+    tftSprite.drawLine(P1[0], P1[1], P7[0], P7[1], TFT_GREY); // 1-7
+    tftSprite.drawLine(P3[0], P3[1], P5[0], P5[1], TFT_GREY); // 3-5
+    tftSprite.drawLine(P5[0], P5[1], P8[0], P8[1], TFT_GREY); // 5-8
+    tftSprite.drawLine(P7[0], P7[1], P6[0], P6[1], TFT_GREY); // 7-6
   }
   tftSprite.pushSprite(113, 13);
   tftSprite.deleteSprite();
@@ -1135,7 +1131,7 @@ void calibrate6886()
   gyroOffset[2] = gyroSum[2] / counter;
   accOffset[0] = accSum[0] / counter;
   accOffset[1] = accSum[1] / counter;
-  accOffset[2] = (accSum[2] / counter) - 1.0; //Gravitational Acceleration 1G, assuming that the M5 button is facing upward
+  accOffset[2] = (accSum[2] / counter) - 1.0; // Gravitational Acceleration 1G, assuming that the M5 button is facing upward
 }
 
 void calibrate_waiting(uint32_t timeout)
@@ -1172,11 +1168,11 @@ void applycalibration()
   gyro[0] -= gyroOffset[0];
   gyro[1] -= gyroOffset[1];
   gyro[2] -= gyroOffset[2];
-  //acc[0] -= accOffset[0];
-  //acc[1] -= accOffset[1];
-  //acc[2] -= accOffset[2];
+  // acc[0] -= accOffset[0];
+  // acc[1] -= accOffset[1];
+  // acc[2] -= accOffset[2];
 
-  //fake magnetometer data cuz MPU6886 doesn't come with BMM 150 chip
+  // fake magnetometer data cuz MPU6886 doesn't come with BMM 150 chip
   mag[0] = 0;
   mag[1] = 0;
   mag[2] = 0;
@@ -1211,16 +1207,16 @@ void myMahonyAHRSupdateIMU9Axis(float gx, float gy, float gz, float ax, float ay
   // (avoids NaN in magnetometer normalisation)
   if ((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))
   {
-    //updateIMU(gx, gy, gz, ax, ay, az);
+    // updateIMU(gx, gy, gz, ax, ay, az);
     return;
   }
 
   invSampleFreq = (1.0f / samplefrequency);
 
   // Convert gyroscope degrees/sec to radians/sec
-  //gx *= 0.0174533f;
-  //gy *= 0.0174533f;
-  //gz *= 0.0174533f;
+  // gx *= 0.0174533f;
+  // gy *= 0.0174533f;
+  // gz *= 0.0174533f;
 
   // Compute feedback only if accelerometer measurement valid
   // (avoids NaN in accelerometer normalisation)
@@ -1238,9 +1234,9 @@ void myMahonyAHRSupdateIMU9Axis(float gx, float gy, float gz, float ax, float ay
     mx *= recipNorm;
     my *= recipNorm;
     mz *= recipNorm;
-    //mx = mx+ 360.0 / 720.0;
-    //my = my+ 360.0 / 720.0;
-    //mz = mz+ 360.0 / 720.0;
+    // mx = mx+ 360.0 / 720.0;
+    // my = my+ 360.0 / 720.0;
+    // mz = mz+ 360.0 / 720.0;
 
     // Auxiliary variables to avoid repeated arithmetic
     q0q0 = myq0 * myq0;
@@ -1332,9 +1328,9 @@ void myMahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
   float halfex, halfey, halfez;
   float qa, qb, qc;
 
-  //static float myq0 = 1.0, myq1 = 0.0, myq2 = 0.0, myq3 = 0.0;          // quaternion of sensor frame relative to auxiliary frame
-  //myq0 = 1.0, myq1 = 0.0, myq2 = 0.0, myq3 = 0.0;
-  // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
+  // static float myq0 = 1.0, myq1 = 0.0, myq2 = 0.0, myq3 = 0.0;          // quaternion of sensor frame relative to auxiliary frame
+  // myq0 = 1.0, myq1 = 0.0, myq2 = 0.0, myq3 = 0.0;
+  //  Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
   if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f)))
   {
 
