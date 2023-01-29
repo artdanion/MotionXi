@@ -220,6 +220,8 @@ void setup()
 
   //wifiManager.resetSettings();
   //SPIFFS.format();
+    Serial.begin(115200);
+  Serial.println("hello");
 
 #ifdef WOM_ATTACH_ISR
   delay(100);
@@ -236,10 +238,11 @@ void setup()
   M5.begin();
 
   Wire.begin(0, 26);
-  Serial.begin(115200);
 
   M5.Mpu6886.Init(); // basic init
   //M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 10);
+
+      Serial.println("2.");
 
   if (bmm.initialize() == BMM150_E_ID_NOT_CONFORM)
   {
@@ -251,6 +254,8 @@ void setup()
     Serial.println("Initialize done!");
     withMagnet = true;
   }
+
+
 
   Serial.print("\n\rCalibrate done..");
   initData();
